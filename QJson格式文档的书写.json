@@ -1,0 +1,40 @@
+
+2021.11.10
+1、Qt中格式文档的撰写
+此处描述的是QJson格式文档的撰写方法，也就是序列化的方法。通过这个方法可以将程序中的关键字、数值、等相关信息。序列化从内存中保存到磁盘文件当中，这样的方式可以使数据持久化存储。也方便网络传输。
+1、QJsonDocume:它封装了一个完整的json文档，可以将基于UTF-8编码的文本信息和qt自己的二进制格式文件，读取和写入信息。
+2、QJsonArray:描述的是QJson的数组，具体来讲json数组是一个值列表，可以通过从数组中插入和删除QJsonValue来操作列表。
+3、QJsonObject：描述的是QJson的对象，json对象是键值对的列表，其中键是唯一的字符串，值由QJsonValue表示。
+在QJsonObject中存储了多个键值对，为了方便操作，键（key）为字符串类型，值（value）为QJsonValue类型。
+
+iterator QJsonObject::insert(const QString &key, const QJsonValue &value);
+想在创建的空对象中加入键值对，可以采用这种方式。insert的方式插入键值对。
+
+int QJsonObject::count() const;
+int QJsonObject::size() const;
+int QJsonObject::length() const;
+以上三种方式可以获取对象中键值对的个数。
+4、QJsonValue该类封装了json支持的数据类型
+
+特意阐述一点：QJsonObject和QJsonArray转换为字符串的方式。
+首先创建QJsonDocume对象
+QJsonDocument::QJsonDocument(const QJsonObject &object);
+QJsonDocument::QJsonDocument(const QJsonArray &array);
+齐次将将文件格式的数据进行序列化
+// 二进制格式的json字符串
+QByteArray QJsonDocument::toBinaryData() const;	 
+// 文本格式
+QByteArray QJsonDocument::toJson(JsonFormat format = Indented) const;	
+最后：使用得到的字符串进行数据传输，或者是持久化磁盘存储
+
+
+//反序列化操作
+1、将得到的json格式的字符串通过QJsonDocument类的静态函数转换为QJsonDocument对象。
+通过以下方式：
+[static] QJsonDocument QJsonDocument::fromBinaryData(const QByteArray &data, DataValidation validation = Validate);
+// 参数文件格式的json字符串
+[static] QJsonDocument QJsonDocument::fromJson(const QByteArray &json, QJsonParseError *error = Q_NULLPTR);
+2、将文档对象转换为json数组、对象。
+3、通过QJsonObject和QJsonArray类提供的API读取存储在对象中的数据。
+
+
